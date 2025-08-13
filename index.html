@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multifunctional Food Processor | Luxury Goods</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Open+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'dark-green': '#1b4332',
+                        'forest-green': '#2d5a3d',
+                        'gold': '#d4af37',
+                        'cream': '#f5f5dc',
+                        'accent-white': '#ffffff'
+                    },
+                    fontFamily: {
+                        heading: ['Cormorant Garamond', 'serif'],
+                        body: ['Open Sans', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .glassmorphism {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+        }
+        .product-gallery img {
+            transition: transform 0.3s ease;
+        }
+        .product-gallery img:hover {
+            transform: scale(1.05);
+        }
+        .testimonial-card {
+            transition: all 0.3s ease;
+        }
+        .testimonial-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+        .social-proof-popup {
+            animation: slideIn 0.5s ease-out;
+        }
+        @keyframes slideIn {
+            from { transform: translateX(100%); }
+            to { transform: translateX(0); }
+        }
+        .highlight {
+            background-color: rgba(212, 175, 55, 0.2);
+            padding: 0 4px;
+            border-radius: 3px;
+        }
+        .strikethrough {
+            text-decoration: line-through;
+            color: #999;
+        }
+        .price-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .carousel-container {
+            position: relative;
+            overflow: hidden;
+        }
+        .carousel-track {
+            display: flex;
+            transition: transform 0.5s ease;
+        }
+        .lightbox {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        .lightbox-content {
+            max-width: 90%;
+            max-height: 90%;
+        }
+        .lightbox-close {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            color: white;
+            font-size: 40px;
+            cursor: pointer;
+        }
+        .carousel-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255, 255, 255, 0.7);
+            border: none;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+        .prev {
+            left: 20px;
+        }
+        .next {
+            right: 20px;
+        }
+        .carousel-dots {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        .dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #ccc;
+            margin: 0 5px;
+            cursor: pointer;
+        }
+        .dot.active {
+            background: #d4af37;
+        }
+        .countdown {
+            font-family: 'Open Sans', sans-serif;
+            font-weight: 700;
+        }
+        .countdown span {
+            display: inline-block;
+            min-width: 40px;
+            padding: 5px;
+            background: #1b4332;
+            color: white;
+            border-radius: 5px;
+            margin: 0 3px;
+        }
+    </style>
+</head>
+<body class="font-body bg-cream text-dark-green">
+    <!-- Social Proof Popup -->
+    <div id="socialProofPopup" class="fixed top-5 right-5 z-50 social-proof-popup hidden">
+        <div class="glassmorphism rounded-lg p-4 flex items-center space-x-3 shadow-lg">
+            <img src="https://cdn.cloudfastcdn.com/image/f3b66f4c50f84fd1f9e9419aff960f0916403698-700.png" alt="Customer" class="w-10 h-10 rounded-full object-cover">
+            <div>
+                <p class="text-sm font-medium" id="popupText">Vina dari Jakarta baru saja memesan</p>
+                <p class="text-xs text-gray-600" id="popupTime">5 menit yang lalu</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Lightbox -->
+    <div id="lightbox" class="lightbox">
+        <span class="lightbox-close">&times;</span>
+        <img class="lightbox-content" id="lightboxImage">
+    </div>
+
+    <!-- Hero Section -->
+    <section class="relative h-screen flex items-center justify-center bg-gradient-to-r from-dark-green to-forest-green text-accent-white">
+        <div class="absolute inset-0 bg-black opacity-40"></div>
+        <div class="container mx-auto px-4 relative z-10 text-center">
+            <h1 class="font-heading text-4xl md:text-6xl font-bold mb-4">Multifunctional Food Processor</h1>
+            <p class="text-xl md:text-2xl mb-8 max-w-2xl mx-auto">4 in 1 Alat dapur serbaguna untuk mengiris, memotong, mencincang, dan menghaluskan makanan dengan cepat dan praktis</p>
+            <div class="flex flex-col md:flex-row items-center justify-center gap-6 mb-8">
+                <div class="price-container">
+                    <span class="text-3xl font-bold">Rp 235.000</span>
+                    <span class="strikethrough text-xl">Rp 375.000</span>
+                </div>
+                <div class="bg-gold text-dark-green px-4 py-2 rounded-full font-bold">
+                    Hemat 37%
+                </div>
+            </div>
+            <button class="oo-embed-button bg-gold hover:bg-yellow-600 text-dark-green font-bold py-3 px-8 rounded-full text-lg transition duration-300 transform hover:scale-105">
+                Pesan Sekarang
+            </button>
+            <div class="mt-8 flex flex-wrap justify-center gap-6 text-sm">
+                <div class="flex items-center">
+                    <i class="fas fa-shipping-fast mr-2"></i>
+                    <span>Gratis Ongkir 2+ pcs</span>
+                </div>
+                <div class="flex items-center">
+                    <i class="fas fa-shield-alt mr-2"></i>
+                    <span>Garansi Resmi</span>
+                </div>
+                <div class="flex items-center">
+                    <i class="fas fa-truck mr-2"></i>
+                    <span>Pembayaran Bank Transfer Kirim Hari Ini</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Product Showcase -->
+    <section class="py-16 bg-white">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-col lg:flex-row gap-12">
+                <div class="lg:w-1/2">
+                    <div class="product-gallery mb-8">
+                        <img src="https://cdn.cloudfastcdn.com/image/f3b66f4c50f84fd1f9e9419aff960f0916403698-700.png" alt="Multifunctional Food Processor" class="w-full rounded-lg shadow-lg cursor-pointer" onclick="openLightbox(this.src)">
+                    </div>
+                    <div class="grid grid-cols-3 md:grid-cols-7 gap-4">
+                        <img src="https://cdn.cloudfastcdn.com/image/58842d102682c57c99ddb1a5adbc25962f9bc847-600.png" alt="Product 1" class="rounded cursor-pointer" onclick="openLightbox(this.src)">
+                        <img src="https://cdn.cloudfastcdn.com/image/a1dab5ea71fd24c736baff734113b20a2f79ae0a-600.png" alt="Product 2" class="rounded cursor-pointer" onclick="openLightbox(this.src)">
+                        <img src="https://cdn.cloudfastcdn.com/image/4b4289b7b25b7194888d48c1431ecec7b7d25721-600.png" alt="Product 3" class="rounded cursor-pointer" onclick="openLightbox(this.src)">
+                        <img src="https://cdn.cloudfastcdn.com/image/38ce38adf0ade19ba32bfa2312a8fab2df6b5904-600.png" alt="Product 4" class="rounded cursor-pointer" onclick="openLightbox(this.src)">
+                        <img src="https://cdn.cloudfastcdn.com/image/5e3432ec6bf6d529bc0c02715a2ffba802b81f6e-600.png" alt="Product 5" class="rounded cursor-pointer" onclick="openLightbox(this.src)">
+                        <img src="https://cdn.cloudfastcdn.com/image/17a00abff358e2ab5fa99382c1b56fcd3cdb140b-600.png" alt="Product 6" class="rounded cursor-pointer" onclick="openLightbox(this.src)">
+                        <img src="https://cdn.cloudfastcdn.com/image/263f07bb169354368b8eb58561b94062c7601951-600.png" alt="Product 7" class="rounded cursor-pointer" onclick="openLightbox(this.src)">
+                    </div>
+                </div>
+                <div class="lg:w-1/2">
+                    <h2 class="font-heading text-3xl font-bold mb-4">Multifunctional Food Processor</h2>
+                    <div class="price-container mb-6">
+                        <span class="text-3xl font-bold text-gold">Rp 235.000</span>
+                        <span class="strikethrough text-xl">Rp 375.000</span>
+                    </div>
+                    <p class="text-lg mb-6">4 in 1 Alat dapur serbaguna untuk mengiris, memotong, mencincang, dan menghaluskan makanan dengan cepat dan praktis, membuat persiapan masakan jadi lebih mudah dan efisien.</p>
+                    
+                    <div class="bg-cream p-6 rounded-lg mb-6">
+                        <div class="flex items-center mb-4">
+                            <i class="fas fa-fire text-gold text-xl mr-3"></i>
+                            <span class="font-bold">Stok Terbatas: Hanya 8 pcs tersisa!</span>
+                        </div>
+                        <div class="flex items-center mb-4">
+                            <i class="fas fa-users text-gold text-xl mr-3"></i>
+                            <span>28 pengunjung sedang melihat produk ini</span>
+                        </div>
+                        <div class="flex items-center">
+                            <i class="fas fa-shopping-cart text-gold text-xl mr-3"></i>
+                            <span>Telah terjual 500+ unit</span>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-8">
+                        <h3 class="font-bold text-xl mb-4">Fitur Utama:</h3>
+                        <ul class="space-y-2">
+                            <li class="flex items-start">
+                                <i class="fas fa-check-circle text-gold mt-1 mr-3"></i>
+                                <span>Multi fungsi: Iris, potong, cincang, haluskan</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fas fa-check-circle text-gold mt-1 mr-3"></i>
+                                <span>Mata pisaunya tajam dan tahan lama</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fas fa-check-circle text-gold mt-1 mr-3"></i>
+                                <span>Mudah dibersihkan</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fas fa-check-circle text-gold mt-1 mr-3"></i>
+                                <span>Bahan berkualitas tinggi</span>
+                            </li>
+                        </ul>
+                    </div>
+                    
+                    <button class="oo-embed-button w-full bg-gold hover:bg-yellow-600 text-dark-green font-bold py-4 px-8 rounded-full text-lg transition duration-300">
+                        Pesan Sekarang dan Dapatkan Diskon 37%
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Video Demo -->
+    <section class="py-16 bg-forest-green text-accent-white">
+        <div class="container mx-auto px-4 text-center">
+            <h2 class="font-heading text-3xl font-bold mb-4">Lihat Demo Penggunaan</h2>
+            <p class="text-xl mb-8 max-w-2xl mx-auto">Lihat bagaimana Multifunctional Food Processor memudahkan pekerjaan dapur Anda</p>
+            <div class="max-w-4xl mx-auto">
+                <img src="https://cdn.cloudfastcdn.com/image/8cf601b0e97bf25002035b18caca396ce89832af.gif" alt="Demo Video" class="w-full rounded-lg shadow-lg">
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials -->
+    <section class="py-16 bg-cream">
+        <div class="container mx-auto px-4">
+            <h2 class="font-heading text-3xl font-bold text-center mb-12">Apa Kata Pelanggan Kami</h2>
+            
+            <div class="carousel-container">
+                <div class="carousel-track">
+                    <!-- Testimonial 1 -->
+                    <div class="testimonial-card bg-white p-6 rounded-lg shadow-md mx-4 flex-shrink-0 w-full md:w-[calc(50%-2rem)] lg:w-[calc(33.333%-2rem)]">
+                        <div class="flex items-center mb-4">
+                            <img src="https://i.pinimg.com/1200x/fe/6b/73/fe6b7347689d24e16426c0e012c64bee.jpg" alt="malidapradana" class="w-10 h-10 rounded-full object-cover mr-3">
+                            <div>
+                                <h4 class="font-bold">malidapradana</h4>
+                                <div class="flex text-gold">
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <p class="mb-4">Sangat membantu mengiris bawang dan bumbu lainnya <span class="highlight">ga bikin aq menangis lagi</span>, <span class="highlight">Recommended produk</span> 👍👍</p>
+                        <img src="https://cdn.cloudfastcdn.com/image/70e8d26669459a34e2f3e007c552c7f9ab032dcc-600.jpeg" alt="Review Media" class="w-20 h-20 rounded-lg object-cover cursor-pointer" onclick="openLightbox(this.src)">
+                    </div>
+                    
+                    <!-- Testimonial 2 -->
+                    <div class="testimonial-card bg-white p-6 rounded-lg shadow-md mx-4 flex-shrink-0 w-full md:w-[calc(50%-2rem)] lg:w-[calc(33.333%-2rem)]">
+                        <div class="flex items-center mb-4">
+                            <img src="https://i.pinimg.com/736x/f2/b9/09/f2b909e0f1b6f459a265c62278d30a9e.jpg" alt="syifacantix" class="w-10 h-10 rounded-full object-cover mr-3">
+                            <div>
+                                <h4 class="font-bold">syifacantix</h4>
+                                <div class="flex text-gold">
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <p class="mb-4">Alat yg <span class="highlight">Sangat membantu</span> dan <span class="highlight">mempermudah ibu saya d dapur</span> 😁</p>
+                        <img src="https://cdn.cloudfastcdn.com/image/153905c3392c1422a03995a9eaa6a72171bea6ab-600.jpeg" alt="Review Media" class="w-20 h-20 rounded-lg object-cover cursor-pointer" onclick="openLightbox(this.src)">
+                    </div>
+                    
+                    <!-- Testimonial 3 -->
+                    <div class="testimonial-card bg-white p-6 rounded-lg shadow-md mx-4 flex-shrink-0 w-full md:w-[calc(50%-2rem)] lg:w-[calc(33.333%-2rem)]">
+                        <div class="flex items-center mb-4">
+                            <img src="https://i.pinimg.com/1200x/4a/96/18/4a961881da2718bb1a4082e2752eccaf.jpg" alt="sendynovianti93" class="w-10 h-10 rounded-full object-cover mr-3">
+                            <div>
+                                <h4 class="font-bold">sendynovianti93</h4>
+                                <div class="flex text-gold">
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <p class="mb-4">Barang yg <span class="highlight">sangat bermanfaat untuk urusan perdapuran</span>, Terimakasih barang di terima dengan baik dan <span class="highlight">berfungsi</span></p>
+                        <img src="https://cdn.cloudfastcdn.com/image/a40dd8481f128b5d0254251f6f4f827db5c20d9a-600.jpeg" alt="Review Media" class="w-20 h-20 rounded-lg object-cover cursor-pointer" onclick="openLightbox(this.src)">
+                    </div>
+                </div>
+                
+                <button class="carousel-nav prev">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                <button class="carousel-nav next">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+                
+                <div class="carousel-dots">
+                    <div class="dot active"></div>
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Countdown & Order Form -->
+    <section class="py-16 bg-white">
+        <div class="container mx-auto px-4">
+            <div class="max-w-4xl mx-auto">
+                <div class="bg-gradient-to-r from-dark-green to-forest-green text-accent-white rounded-xl p-8 shadow-xl">
+                    <div class="text-center mb-8">
+                        <h2 class="font-heading text-3xl font-bold mb-4">Penawaran Spesial Berakhir Dalam:</h2>
+                        <div class="countdown text-2xl md:text-4xl">
+                            <span id="hours">05</span> :
+                            <span id="minutes">30</span> :
+                            <span id="seconds">45</span>
+                        </div>
+                        <p class="mt-4">Stok Terbatas: Hanya 8 pcs tersisa!</p>
+                    </div>
+                    
+                    <div class="glassmorphism rounded-xl p-6">
+                        <h3 class="font-heading text-2xl font-bold mb-6 text-center">Form Pemesanan</h3>
+                        <div class="ooef">
+                            <form class="orderonline-embed-form" data-username="vera" data-product-slug="multifunctional-food-processor" data-product-id="689c305c0c125147bd0d132e" id="oo-embed-form-multifunctional-food-processor-5121" data-origin="orderonline">
+                                <div class="ooef-loader">
+                                    <div aria-live="polite" role="status">
+                                        <div>Loading...</div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-dark-green text-accent-white py-12">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="mb-6 md:mb-0">
+                    <h3 class="font-heading text-2xl font-bold">Luxury Goods</h3>
+                    <p class="mt-2">Menyediakan produk berkualitas tinggi untuk kebutuhan rumah tangga Anda</p>
+                </div>
+                <div class="flex space-x-6">
+                    <a href="#" class="text-accent-white hover:text-gold transition duration-300">
+                        <i class="fab fa-facebook-f"></i>
+                    </a>
+                    <a href="#" class="text-accent-white hover:text-gold transition duration-300">
+                        <i class="fab fa-instagram"></i>
+                    </a>
+                    <a href="#" class="text-accent-white hover:text-gold transition duration-300">
+                        <i class="fab fa-whatsapp"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="border-t border-forest-green mt-8 pt-8 text-center">
+                <p>&copy; 2025 Luxury Goods. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- OrderOnline Embed Code -->
+    <script>
+        if (typeof xLogError != 'function') {
+            var xLogError = function (error) {
+                var req = new XMLHttpRequest();
+                var payload = JSON.stringify({ url: document.location.href, line: error.line, stack: error.stack });
+                var params = 'message=' + encodeURIComponent(error.name) + '&payload=' + encodeURIComponent(payload) + '&type=embed&level=error';
+                req.open('POST', 'https://api.orderonline.id/log', true);
+                req.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+                req.send(params);
+            };
+        }
+        try {
+            if (typeof xEmbedScript != 'function') {
+                var xEmbedScript = function () {
+                    !function(w, d, e, v, id, t, s) {
+                        if (d.getElementById(id)) return;
+                        t = d.createElement(e);t.async = !0;t.src = v;t.id = id;
+                        s = d.getElementsByTagName(e)[0]; s.parentNode.insertBefore(t, s);
+                    }(window, document, 'script', 'https://cdn.orderonline.id/js/embed-v2-slim.min.js?v=8.0.4', 'oo-embed-js');
+                };
+            }
+            if (typeof xEmbedInit != 'function') {
+                var xEmbedInit = function (w, n) {
+                    if (w.ooe) return;
+                    n = w.ooe = function() { n.callMethod ? n.callMethod.apply(n, arguments) : n.queue.push(arguments) };
+                    if (!w._ooe) w._ooe = n; n.push = n;n.loaded = !0;n.version = '8.0.4';n.queue = [];
+                };
+            }
+            xEmbedInit(window);
+            ooe('setup', 'redirect', 'https://vera.orderonline.id');
+            ooe('init', '5f1a7807a9bf807d6c63d963', '689c305c0c125147bd0d132e', '689c305c0c125147bd0d132f', 'oo-embed-form-multifunctional-food-processor-5121', {"mode":"page","action":"Klik untuk pemesanan","title":"Form Pemesanan","triggerPixel":true,"triggerGtm":true});
+            if (!window.jQuery) {
+                !function(w, d, e, v, id, t, s) {
+                    if (d.getElementById(id)) return;
+                    t = d.createElement(e);t.async = !0;t.src = v;t.id = id;
+                    t.addEventListener('load', xEmbedScript);
+                    s = d.getElementsByTagName(e)[0]; s.parentNode.insertBefore(t, s);
+                }(window, document, 'script', 'https://cdn.orderonline.id/js/vendor/jquery.min.js', 'oo-embed-jquery');
+            } else {
+                xEmbedScript();
+            }
+        } catch (e) {
+            xLogError(e);
+            throw e;
+        }
+    </script>
+
+    <script>
+        // Lightbox functionality
+        function openLightbox(src) {
+            document.getElementById('lightbox').style.display = 'flex';
+            document.getElementById('lightboxImage').src = src;
+        }
+        
+        document.querySelector('.lightbox-close').addEventListener('click', function() {
+            document.getElementById('lightbox').style.display = 'none';
+        });
+        
+        document.getElementById('lightbox').addEventListener('click', function(e) {
+            if (e.target === this) {
+                this.style.display = 'none';
+            }
+        });
+        
+        // Carousel functionality
+        let currentIndex = 0;
+        const track = document.querySelector('.carousel-track');
+        const dots = document.querySelectorAll('.dot');
+        const testimonialCards = document.querySelectorAll('.testimonial-card');
+        const cardWidth = testimonialCards[0].offsetWidth + 32; // 32px for margins
+        
+        function updateCarousel() {
+            track.style.transform = `translateX(-${currentIndex * cardWidth}px)`;
+            
+            // Update dots
+            dots.forEach((dot, index) => {
+                dot.classList.toggle('active', index === currentIndex);
+            });
+        }
+        
+        document.querySelector('.next').addEventListener('click', () => {
+            if (currentIndex < testimonialCards.length - 1) {
+                currentIndex++;
+                updateCarousel();
+            }
+        });
+        
+        document.querySelector('.prev').addEventListener('click', () => {
+            if (currentIndex > 0) {
+                currentIndex--;
+                updateCarousel();
+            }
+        });
+        
+        // Auto-scroll carousel
+        setInterval(() => {
+            if (currentIndex < testimonialCards.length - 1) {
+                currentIndex++;
+            } else {
+                currentIndex = 0;
+            }
+            updateCarousel();
+        }, 5000);
+        
+        // Dot navigation
+        dots.forEach((dot, index) => {
+            dot.addEventListener('click', () => {
+                currentIndex = index;
+                updateCarousel();
+            });
+        });
+        
+        // Countdown timer
+        function updateCountdown() {
+            const hours = document.getElementById('hours');
+            const minutes = document.getElementById('minutes');
+            const seconds = document.getElementById('seconds');
+            
+            let h = parseInt(hours.textContent);
+            let m = parseInt(minutes.textContent);
+            let s = parseInt(seconds.textContent);
+            
+            s--;
+            if (s < 0) {
+                s = 59;
+                m--;
+                if (m < 0) {
+                    m = 59;
+                    h--;
+                    if (h < 0) {
+                        h = 23;
+                    }
+                }
+            }
+            
+            hours.textContent = h.toString().padStart(2, '0');
+            minutes.textContent = m.toString().padStart(2, '0');
+            seconds.textContent = s.toString().padStart(2, '0');
+        }
+        
+        setInterval(updateCountdown, 1000);
+        
+        // Social proof popup
+        const customerNames = ['Vina', 'Dina', 'Kartika', 'Lestari', 'Putri', 'Maya Sari', 'Rani', 'Permata', 'Lestari F'];
+        const customerCities = ['Jakarta', 'Surabaya', 'Bandung', 'Medan', 'Bekasi', 'Tangerang', 'Depok', 'Semarang'];
+        
+        function showSocialProof() {
+            const popup = document.getElementById('socialProofPopup');
+            const name = customerNames[Math.floor(Math.random() * customerNames.length)];
+            const city = customerCities[Math.floor(Math.random() * customerCities.length)];
+            const minutesAgo = Math.floor(Math.random() * 15) + 1;
+            
+            document.getElementById('popupText').textContent = `${name} dari ${city} baru saja memesan`;
+            document.getElementById('popupTime').textContent = `${minutesAgo} menit yang lalu`;
+            
+            popup.classList.remove('hidden');
+            popup.style.display = 'block';
+            
+            setTimeout(() => {
+                popup.style.display = 'none';
+            }, 5000);
+        }
+        
+        // Show popup every 8 seconds
+        setInterval(showSocialProof, 8000);
+        
+        // Show initial popup after 3 seconds
+        setTimeout(showSocialProof, 3000);
+    </script>
+</body>
+</html>
